@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LUXE — Women's Luxury Fashion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --bg3: #1a1a1a;
+      --bg4: #242424;
+      --accent: #c9a96e;
+      --accent2: #dbbd82;
+      --text: #f5f5f5;
+      --muted: #888;
+      --border: rgba(255,255,255,0.06);
+      --white: #fff;
+      --shadow: rgba(201,169,110,0.12);
+      --radius: 14px;
+      --transition: 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    .page { display: none; min-height: 100vh; animation: fadeIn 0.6s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: 76px; display: flex; justify-content: space-between; align-items: center;
+      padding: 0 64px;
+      background: rgba(10,10,10,0.82); backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.4s ease;
+    }
+    nav.scrolled { background: rgba(10,10,10,0.96); border-bottom-color: rgba(201,169,110,0.15); }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px; font-weight: 800; color: var(--white);
+      letter-spacing: 5px; cursor: pointer;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-logo::after { content: '✦'; font-size: 10px; color: var(--accent); margin-left: 6px; opacity: 0.6; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
+      cursor: pointer; transition: color 0.3s; position: relative;
+      text-transform: uppercase;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -6px; left: 0;
+      width: 0; height: 2px; background: var(--accent);
+      transition: width 0.4s ease;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-right { display: flex; align-items: center; gap: 28px; }
+    .nav-icon {
+      color: var(--muted); font-size: 18px; cursor: pointer;
+      background: none; border: none; transition: all 0.3s;
+      position: relative;
+    }
+    .nav-icon:hover { color: var(--accent); transform: scale(1.05); }
+    .cart-count {
+      position: absolute; top: -8px; right: -10px;
+      min-width: 20px; height: 20px; border-radius: 50%;
+      background: var(--accent); color: #000;
+      font-size: 10px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 5px;
+    }
+
+    .hero {
+      min-height: 100vh; padding-top: 76px;
+      display: flex; flex-direction: column;
+      background: var(--bg);
+      position: relative; overflow: hidden;
+    }
+    .hero-bg-glow {
+      position: absolute; top: -20%; right: -10%; width: 60%; height: 80%;
+      background: radial-gradient(ellipse, rgba(201,169,110,0.05), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-main {
+      flex: 1; display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 0; padding: 0 64px;
+    }
+    .hero-text { padding: 60px 0; max-width: 620px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--accent); border: 1px solid rgba(201,169,110,0.25);
+      padding: 6px 20px; border-radius: 50px; margin-bottom: 32px;
+      background: rgba(201,169,110,0.05);
+    }
+    .hero-tag::before { content: '●'; font-size: 6px; color: var(--accent); }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(48px, 6.5vw, 90px); font-weight: 800;
+      line-height: 1.0; letter-spacing: -4px; color: var(--white);
+      margin-bottom: 28px;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent); position: relative; }
+    .hero h1 em::after {
+      content: ''; position: absolute; bottom: 4px; left: 0; right: 0;
+      height: 4px; background: var(--accent); opacity: 0.3; border-radius: 4px;
+    }
+    .hero-desc {
+      font-size: 16px; color: var(--muted); line-height: 1.9; max-width: 440px; margin-bottom: 48px;
+      font-weight: 300;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      text-decoration: none; cursor: pointer; border: none;
+      font-family: 'Inter', sans-serif; transition: all var(--transition);
+      font-weight: 600;
+    }
+    .btn-gold {
+      background: var(--accent); color: #0a0a0a;
+      font-size: 13px; font-weight: 700; padding: 18px 42px; border-radius: 6px; letter-spacing: 0.5px;
+    }
+    .btn-gold:hover { background: var(--accent2); transform: translateY(-4px); box-shadow: 0 16px 48px var(--shadow); }
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.15); color: var(--text);
+      font-size: 13px; font-weight: 500; padding: 18px 42px; border-radius: 6px; background: transparent;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-4px); }
+    .hero-img-wrap {
+      height: 100vh; position: relative; overflow: hidden;
+    }
+    .hero-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, var(--bg) 0%, transparent 35%);
+    }
+    .hero-scroll {
+      padding: 24px 64px; display: flex; align-items: center; gap: 48px;
+      border-top: 1px solid var(--border);
+      background: rgba(10,10,10,0.3);
+    }
+    .scroll-stat { text-align: center; }
+    .scroll-num {
+      font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; color: var(--accent);
+      letter-spacing: -1px;
+    }
+    .scroll-lbl { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+    .scroll-div { width: 1px; height: 44px; background: var(--border); }
+
+    .sec { padding: 100px 64px; max-width: 1440px; margin: 0 auto; }
+    .sec-tag {
+      font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 12px;
+    }
+    .sec-tag::before { content: '—'; color: var(--accent); }
+    .sec-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(30px, 4.2vw, 54px); font-weight: 800;
+      color: var(--white); letter-spacing: -2px; margin-bottom: 14px;
+      line-height: 1.1;
+    }
+    .sec-sub {
+      font-size: 15px; color: var(--muted); line-height: 1.8; max-width: 520px; margin-bottom: 60px;
+      font-weight: 300;
+    }
+
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 44px; }
+    .filter-btn {
+      padding: 10px 26px; border-radius: 50px; font-size: 12px; font-weight: 600;
+      border: 1px solid var(--border); color: var(--muted);
+      background: transparent; cursor: pointer; transition: all 0.3s;
+      letter-spacing: 0.5px;
+    }
+    .filter-btn.active,
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(201,169,110,0.06); }
+
+    .products-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px;
+    }
+    .prod-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .prod-card:hover {
+      transform: translateY(-10px); border-color: rgba(201,169,110,0.25);
+      box-shadow: 0 28px 64px rgba(0,0,0,0.6);
+    }
+    .prod-img {
+      width: 100%; height: 340px; object-fit: cover;
+      transition: transform 0.7s ease; display: block;
+    }
+    .prod-card:hover .prod-img { transform: scale(1.06); }
+    .prod-body { padding: 22px 24px; }
+    .prod-cat {
+      font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .prod-name {
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+      color: var(--white); margin-bottom: 8px;
+    }
+    .prod-price { font-size: 17px; font-weight: 700; color: var(--accent); }
+    .prod-old {
+      font-size: 12px; color: var(--muted); text-decoration: line-through; margin-left: 10px;
+    }
+    .prod-actions { display: flex; gap: 10px; margin-top: 18px; }
+    .prod-btn {
+      flex: 1; padding: 12px; border-radius: 6px;
+      font-size: 11px; font-weight: 700; cursor: pointer; border: none;
+      transition: all 0.3s; letter-spacing: 0.3px;
+    }
+    .prod-btn-buy { background: var(--accent); color: #0a0a0a; }
+    .prod-btn-buy:hover { background: var(--accent2); transform: translateY(-2px); }
+    .prod-btn-wish {
+      background: var(--bg3); color: var(--muted); border: 1px solid var(--border);
+      flex: 0.35; font-size: 16px;
+    }
+    .prod-btn-wish:hover { border-color: var(--accent); color: var(--accent); }
+
+    .collections-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .col-card {
+      border-radius: 16px; overflow: hidden; cursor: pointer;
+      position: relative; height: 440px; transition: transform 0.5s ease;
+    }
+    .col-card:hover { transform: scale(1.03); }
+    .col-card img { width: 100%; height: 100%; object-fit: cover; }
+    .col-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 40px;
+    }
+    .col-name {
+      font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--white); letter-spacing: -1px;
+    }
+    .col-count { font-size: 13px; color: var(--accent); margin-bottom: 14px; }
+    .col-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--white); font-size: 13px; font-weight: 600;
+      transition: color 0.3s; letter-spacing: 0.5px;
+    }
+    .col-btn:hover { color: var(--accent); }
+
+    .lookbook-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+    }
+    .look-item {
+      position: relative; overflow: hidden; cursor: pointer;
+    }
+    .look-item:first-child { grid-row: span 2; }
+    .look-item img {
+      width: 100%; height: 100%; min-height: 300px; object-fit: cover;
+      transition: transform 0.7s ease; display: block;
+    }
+    .look-item:hover img { transform: scale(1.06); }
+    .look-overlay {
+      position: absolute; inset: 0;
+      background: rgba(201,169,110,0);
+      transition: background 0.5s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .look-item:hover .look-overlay { background: rgba(201,169,110,0.15); }
+    .look-icon {
+      color: var(--white); font-size: 40px; opacity: 0; transition: opacity 0.5s;
+      font-weight: 100;
+    }
+    .look-item:hover .look-icon { opacity: 1; }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .about-img { border-radius: 16px; overflow: hidden; height: 600px; }
+    .about-img img { width: 100%; height: 100%; object-fit: cover; }
+    .values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+    .val-card {
+      padding: 26px; background: var(--bg3); border: 1px solid var(--border); border-radius: 12px;
+      transition: all 0.3s;
+    }
+    .val-card:hover { border-color: var(--accent); transform: translateY(-4px); background: var(--bg2); }
+    .val-icon { font-size: 28px; margin-bottom: 12px; }
+    .val-title {
+      font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 6px;
+    }
+    .val-text { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+    .sale-hero {
+      background: linear-gradient(145deg, #1a0c00, #0a0500);
+      padding: 80px 64px; text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .sale-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(201,169,110,0.05), transparent 70%);
+      pointer-events: none;
+    }
+    .sale-badge {
+      display: inline-block; background: var(--accent); color: #0a0a0a;
+      font-size: 11px; font-weight: 800; letter-spacing: 2.5px; padding: 6px 22px; border-radius: 4px; margin-bottom: 20px;
+    }
+    .sale-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(44px, 6.5vw, 84px); font-weight: 800; color: var(--white);
+      letter-spacing: -4px; margin-bottom: 16px;
+    }
+    .sale-title span { color: var(--accent); }
+    .sale-desc { font-size: 16px; color: var(--muted); margin-bottom: 32px; }
+    .countdown { display: flex; gap: 24px; justify-content: center; margin-bottom: 36px; }
+    .cd-item { text-align: center; }
+    .cd-num {
+      font-family: 'Syne', sans-serif; font-size: 52px; font-weight: 800; color: var(--accent); line-height: 1;
+    }
+    .cd-lbl { font-size: 10px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
+    .cd-sep {
+      font-family: 'Syne', sans-serif; font-size: 52px; font-weight: 800; color: var(--border); line-height: 1;
+    }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+    .contact-info { display: flex; flex-direction: column; gap: 20px; }
+    .c-card {
+      padding: 22px 24px; background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 12px; display: flex; align-items: center; gap: 18px;
+      transition: all 0.3s;
+    }
+    .c-card:hover { border-color: var(--accent); transform: translateX(6px); background: var(--bg2); }
+    .c-ico {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: rgba(201,169,110,0.08); border: 1px solid rgba(201,169,110,0.15);
+      display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .c-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+    .c-val { font-size: 14px; color: var(--text); font-weight: 500; }
+    .contact-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%; padding: 14px 18px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text);
+      font-family: 'Inter', sans-serif; font-size: 14px;
+      outline: none; transition: border-color 0.3s;
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus { border-color: var(--accent); }
+    .form-textarea { height: 120px; resize: vertical; }
+    .form-select option { background: var(--bg3); }
+    .form-btn {
+      background: var(--accent); color: #0a0a0a;
+      font-size: 14px; font-weight: 700; padding: 16px;
+      border-radius: 8px; border: none; cursor: pointer;
+      transition: all 0.3s; letter-spacing: 0.5px;
+    }
+    .form-btn:hover { background: var(--accent2); transform: translateY(-3px); }
+
+    .cart-grid { display: grid; grid-template-columns: 1fr 380px; gap: 44px; align-items: start; }
+    .cart-items { display: flex; flex-direction: column; gap: 16px; }
+    .cart-item {
+      display: grid; grid-template-columns: 100px 1fr auto; gap: 20px;
+      align-items: center; padding: 20px 24px; background: var(--bg3);
+      border: 1px solid var(--border); border-radius: 12px;
+      transition: all 0.3s;
+    }
+    .cart-item:hover { border-color: rgba(201,169,110,0.2); }
+    .cart-item-img { width: 100px; height: 120px; object-fit: cover; border-radius: 8px; }
+    .cart-item-name {
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 4px;
+    }
+    .cart-item-cat { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    .qty-control { display: flex; align-items: center; gap: 12px; }
+    .qty-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bg4); border: 1px solid var(--border);
+      color: var(--text); font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s;
+    }
+    .qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .qty-num {
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: var(--white); width: 24px; text-align: center;
+    }
+    .cart-item-price {
+      font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--accent);
+    }
+    .cart-summary {
+      background: var(--bg3); border: 1px solid var(--border); border-radius: 16px;
+      padding: 34px; position: sticky; top: 96px;
+    }
+    .summary-title {
+      font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 24px;
+    }
+    .summary-row {
+      display: flex; justify-content: space-between;
+      font-size: 14px; color: var(--muted); margin-bottom: 12px;
+    }
+    .summary-row.total {
+      font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--white);
+      border-top: 1px solid var(--border); padding-top: 16px; margin-top: 8px;
+    }
+    .summary-row.total span:last-child { color: var(--accent); }
+    .checkout-btn {
+      width: 100%; margin-top: 24px; padding: 16px;
+      background: var(--accent); color: #0a0a0a;
+      font-size: 14px; font-weight: 700; border: none; border-radius: 8px;
+      cursor: pointer; transition: all 0.3s;
+    }
+    .checkout-btn:hover { background: var(--accent2); transform: translateY(-3px); }
+
+    .wishlist-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+    .profile-layout { display: grid; grid-template-columns: 280px 1fr; gap: 44px; align-items: start; }
+    .profile-sidebar {
+      background: var(--bg3); border: 1px solid var(--border); border-radius: 16px;
+      padding: 34px; text-align: center;
+    }
+    .profile-avatar {
+      width: 100px; height: 100px; border-radius: 50%;
+      background: linear-gradient(145deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: #0a0a0a;
+      margin: 0 auto 16px;
+    }
+    .profile-name {
+      font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 4px;
+    }
+    .profile-email { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+    .profile-nav { display: flex; flex-direction: column; gap: 4px; }
+    .prof-nav-btn {
+      padding: 12px 16px; border-radius: 8px; border: none;
+      background: transparent; color: var(--muted);
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      text-align: left; transition: all 0.3s;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .prof-nav-btn:hover,
+    .prof-nav-btn.active { background: rgba(201,169,110,0.08); color: var(--accent); }
+    .profile-content {
+      background: var(--bg3); border: 1px solid var(--border); border-radius: 16px; padding: 44px;
+    }
+    .orders-list { display: flex; flex-direction: column; gap: 16px; }
+    .order-card {
+      padding: 20px 24px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+      display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 20px;
+      transition: all 0.3s;
+    }
+    .order-card:hover { border-color: rgba(201,169,110,0.15); }
+    .order-id {
+      font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 4px;
+    }
+    .order-date { font-size: 12px; color: var(--muted); }
+    .order-status {
+      display: inline-block; padding: 4px 14px; border-radius: 50px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    }
+    .status-delivered { background: rgba(0,200,100,0.12); color: #00c864; }
+    .status-processing { background: rgba(201,169,110,0.12); color: var(--accent); }
+    .status-shipped { background: rgba(50,150,255,0.12); color: #4a9eff; }
+    .order-amount {
+      font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--accent);
+    }
+
+    .newsletter {
+      background: var(--bg3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 80px 64px; text-align: center;
+    }
+    .nl-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(26px, 3.5vw, 46px); font-weight: 800; color: var(--white);
+      letter-spacing: -2px; margin-bottom: 12px;
+    }
+    .nl-sub { font-size: 15px; color: var(--muted); margin-bottom: 32px; }
+    .nl-form { display: flex; gap: 12px; max-width: 500px; margin: 0 auto; }
+    .nl-input {
+      flex: 1; padding: 14px 20px; background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 14px; outline: none; transition: border-color 0.3s;
+    }
+    .nl-input:focus { border-color: var(--accent); }
+    .nl-btn {
+      padding: 14px 34px; background: var(--accent); color: #0a0a0a;
+      font-size: 14px; font-weight: 700; border: none; border-radius: 8px;
+      cursor: pointer; transition: all 0.3s; white-space: nowrap;
+    }
+    .nl-btn:hover { background: var(--accent2); transform: translateY(-2px); }
+
+    footer {
+      background: var(--bg2); border-top: 1px solid var(--border); padding: 60px 64px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; max-width: 1440px; margin: 0 auto 40px;
+    }
+    .footer-brand {
+      font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--white); letter-spacing: 4px; margin-bottom: 16px;
+    }
+    .footer-brand span { color: var(--accent); }
+    .footer-desc { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 24px; max-width: 320px; }
+    .footer-title {
+      font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--white);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 18px;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a {
+      font-size: 13px; color: var(--muted); text-decoration: none; cursor: pointer; transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom {
+      max-width: 1440px; margin: 0 auto; padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-copy { font-size: 12px; color: var(--muted); }
+    .footer-pay { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pay-badge {
+      padding: 4px 14px; background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 4px; font-size: 10px; color: var(--muted); letter-spacing: 0.5px; font-weight: 600;
+    }
+
+    .toast {
+      position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+      background: var(--bg3); border: 1px solid var(--accent);
+      padding: 16px 28px; border-radius: 12px;
+      font-size: 14px; color: var(--text);
+      display: flex; align-items: center; gap: 12px;
+      transform: translateX(200px); opacity: 0;
+      transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .toast.show { transform: translateX(0); opacity: 1; }
+    .toast-icon { color: var(--accent); font-size: 18px; }
+
+    .page-header {
+      padding: 120px 64px 60px; background: var(--bg2); border-bottom: 1px solid var(--border);
+    }
+    .page-header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(38px, 5vw, 66px); font-weight: 800; color: var(--white);
+      letter-spacing: -3px; margin-bottom: 8px;
+    }
+    .page-header p { font-size: 15px; color: var(--muted); }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--muted); margin-bottom: 16px;
+    }
+    .breadcrumb span { cursor: pointer; transition: color 0.3s; }
+    .breadcrumb span:hover { color: var(--accent); }
+    .breadcrumb-sep { color: var(--border); }
+
+    @media (max-width: 1024px) {
+      nav { padding: 0 30px; }
+      .hero-main { grid-template-columns: 1fr; padding: 60px 30px 0; }
+      .hero-img-wrap { height: 400px; }
+      .hero-scroll { padding: 20px 30px; gap: 28px; flex-wrap: wrap; }
+      .sec { padding: 60px 30px; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .collections-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .cart-grid { grid-template-columns: 1fr; }
+      .profile-layout { grid-template-columns: 1fr; }
+      .wishlist-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .page-header { padding: 100px 30px 40px; }
+      .sale-hero { padding: 60px 30px; }
+      .newsletter { padding: 60px 30px; }
+      footer { padding: 40px 30px; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .products-grid { grid-template-columns: 1fr; }
+      .collections-grid { grid-template-columns: 1fr; }
+      .wishlist-grid { grid-template-columns: 1fr; }
+      .lookbook-grid { grid-template-columns: 1fr 1fr; }
+      .look-item:first-child { grid-row: span 1; }
+      .nl-form { flex-direction: column; }
+      footer { padding: 40px 20px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+      .sec { padding: 40px 20px; }
+      .page-header { padding: 90px 20px 30px; }
+      .sale-hero { padding: 50px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      .cart-item { grid-template-columns: 1fr; text-align: center; }
+      .cart-item-img { width: 100%; height: 200px; }
+      .hero-main { padding: 40px 20px 0; }
+      .hero-scroll { padding: 16px 20px; gap: 16px; }
+      nav { padding: 0 20px; }
+      .newsletter { padding: 40px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">LUXE<span>.</span></div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')">Home</a></li>
+    <li><a onclick="showPage('products')">Shop</a></li>
+    <li><a onclick="showPage('collections')">Collections</a></li>
+    <li><a onclick="showPage('lookbook')">Lookbook</a></li>
+    <li><a onclick="showPage('sale')">Sale 🔥</a></li>
+    <li><a onclick="showPage('about')">About</a></li>
+    <li><a onclick="showPage('contact')">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-icon" onclick="showPage('wishlist')" title="Wishlist">♡</button>
+    <button class="nav-icon" onclick="showPage('cart')" title="Cart" style="position:relative;">
+      🛍
+      <span class="cart-count" id="cartCount">8</span>
+    </button>
+    <button class="nav-icon" onclick="showPage('profile')" title="Profile">👤</button>
+  </div>
+</nav>
+
+<div class="toast" id="toast">
+  <span class="toast-icon">✦</span>
+  <span id="toastMsg">Added to cart!</span>
+</div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-bg-glow"></div>
+    <div class="hero-main">
+      <div class="hero-text">
+        <div class="hero-tag">✦ Her Collection 2025</div>
+        <h1>Wear Your<br><em>Story</em><br>Boldly.</h1>
+        <p class="hero-desc">Discover premium luxury fashion for women who dare to be different. Timeless elegance meets modern edge.</p>
+        <div class="hero-btns">
+          <button class="btn btn-gold" onclick="showPage('products')">Shop Now →</button>
+          <button class="btn btn-outline" onclick="showPage('collections')">View Collections</button>
+        </div>
+      </div>
+      <div class="hero-img-wrap">
+        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=900&h=1000&fit=crop" alt="Hero Fashion" loading="lazy">
+        <div class="hero-img-overlay"></div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-stat"><div class="scroll-num">900+</div><div class="scroll-lbl">Products</div></div>
+      <div class="scroll-div"></div>
+      <div class="scroll-stat"><div class="scroll-num">50K+</div><div class="scroll-lbl">Customers</div></div>
+      <div class="scroll-div"></div>
+      <div class="scroll-stat"><div class="scroll-num">20+</div><div class="scroll-lbl">Collections</div></div>
+      <div class="scroll-div"></div>
+      <div class="scroll-stat"><div class="scroll-num">4.9★</div><div class="scroll-lbl">Rating</div></div>
+    </div>
+  </div>
+
+  <!-- Featured -->
+  <div class="sec">
+    <div class="sec-tag">Featured</div>
+    <h2 class="sec-title">New Arrivals</h2>
+    <p class="sec-sub">Fresh luxury styles for her. Be the first to wear the latest.</p>
+    <div class="products-grid" id="featuredGrid"></div>
+  </div>
+
+  <div class="newsletter">
+    <div class="sec-tag" style="justify-content:center;display:flex;border:none;">Exclusive Offers</div>
+    <div class="nl-title">Get 20% Off Your First Order</div>
+    <div class="nl-sub">Subscribe to our newsletter and stay ahead of luxury fashion trends.</div>
+    <div class="nl-form">
+      <input class="nl-input" placeholder="Enter your email address">
+      <button class="nl-btn" onclick="showToast('Subscribed! Check your email 🎉')">Subscribe</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">LUXE<span>.</span></div>
+        <div class="footer-desc">Premium luxury fashion for women who define their own style. Quality craftsmanship, timeless design.</div>
+      </div>
+      <div>
+        <div class="footer-title">Shop</div>
+        <div class="footer-links">
+          <a onclick="showPage('products')">New Arrivals</a>
+          <a onclick="showPage('collections')">Collections</a>
+          <a onclick="showPage('sale')">Sale</a>
+          <a onclick="showPage('lookbook')">Lookbook</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-title">Help</div>
+        <div class="footer-links">
+          <a onclick="showPage('contact')">Contact Us</a>
+          <a>Shipping Info</a>
+          <a>Returns</a>
+          <a>Size Guide</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-title">Company</div>
+        <div class="footer-links">
+          <a onclick="showPage('about')">About Us</a>
+          <a>Careers</a>
+          <a>Press</a>
+          <a>Sustainability</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 LUXE Fashion. All rights reserved.</div>
+      <div class="footer-pay">
+        <div class="pay-badge">VISA</div>
+        <div class="pay-badge">MASTERCARD</div>
+        <div class="pay-badge">JAZZCASH</div>
+        <div class="pay-badge">EASYPAISA</div>
+        <div class="pay-badge">AMEX</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- PRODUCTS -->
+<div class="page" id="page-products">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">Home</span><span class="breadcrumb-sep">›</span><span>Shop</span></div>
+    <h1>All Products</h1>
+    <p>Explore our full luxury collection for women</p>
+  </div>
+  <div class="sec">
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFilter(this,'all')">All</button>
+      <button class="filter-btn" onclick="setFilter(this,'tops')">Tops</button>
+      <button class="filter-btn" onclick="setFilter(this,'trousers')">Trousers</button>
+      <button class="filter-btn" onclick="setFilter(this,'bags')">Handbags</button>
+      <button class="filter-btn" onclick="setFilter(this,'sunglasses')">Sunglasses</button>
+      <button class="filter-btn" onclick="setFilter(this,'sale')">Sale</button>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+</div>
+
+<!-- COLLECTIONS -->
+<div class="page" id="page-collections">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">Home</span><span class="breadcrumb-sep">›</span><span>Collections</span></div>
+    <h1>Collections</h1>
+    <p>Curated luxury fashion stories for every woman</p>
+  </div>
+  <div class="sec">
+    <div class="collections-grid">
+      <div class="col-card" onclick="showPage('products')"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&h=400&fit=crop" loading="lazy"><div class="col-overlay"><div class="col-name">Summer 2025</div><div class="col-count">48 pieces</div><div class="col-btn">Explore →</div></div></div>
+      <div class="col-card" onclick="showPage('products')"><img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&h=400&fit=crop" loading="lazy"><div class="col-overlay"><div class="col-name">Evening Luxe</div><div class="col-count">32 pieces</div><div class="col-btn">Explore →</div></div></div>
+      <div class="col-card" onclick="showPage('products')"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&h=400&fit=crop" loading="lazy"><div class="col-overlay"><div class="col-name">Golden Hour</div><div class="col-count">56 pieces</div><div class="col-btn">Explore →</div></div></div>
+      <div class="col-card" onclick="showPage('products')"><img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600&h=400&fit=crop" loading="lazy"><div class="col-overlay"><div class="col-name">Silk & Satin</div><div class="col-count">28 pieces</div><div class="col-btn">Explore →</div></div></div>
+      <div class="col-card" onclick="showPage('products')"><img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=400&fit=crop" loading="lazy"><div class="col-overlay"><div class="col-name">Accessories Luxe</div><div class="col-count">64 pieces</div><div class="col-btn">Explore →</div></div></div>
+      <div class="col-card" onclick="showPage('products')"><img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&h=400&fit=crop" loading="lazy"><div class="col-overlay"><div class="col-name">Sunset Shades</div><div class="col-count">40 pieces</div><div class="col-btn">Explore →</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOOKBOOK -->
+<div class="page" id="page-lookbook">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">Home</span><span class="breadcrumb-sep">›</span><span>Lookbook</span></div>
+    <h1>Lookbook</h1>
+    <p>Style inspiration from the LUXE community</p>
+  </div>
+  <div style="padding-top:20px;">
+    <div class="lookbook-grid">
+      <div class="look-item"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&h=700&fit=crop" loading="lazy"><div class="look-overlay"><span class="look-icon">✦</span></div></div>
+      <div class="look-item"><img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=600&h=350&fit=crop" loading="lazy"><div class="look-overlay"><span class="look-icon">✦</span></div></div>
+      <div class="look-item"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&h=350&fit=crop" loading="lazy"><div class="look-overlay"><span class="look-icon">✦</span></div></div>
+      <div class="look-item"><img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&h=350&fit=crop" loading="lazy"><div class="look-overlay"><span class="look-icon">✦</span></div></div>
+      <div class="look-item"><img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600&h=350&fit=crop" loading="lazy"><div class="look-overlay"><span class="look-icon">✦</span></div></div>
+      <div class="look-item"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=350&fit=crop" loading="lazy"><div class="look-overlay"><span class="look-icon">✦</span></div></div>
+      <div class="look-item"><img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=350&fit=crop" loading="lazy"><div class="look-overlay"><span class="look-icon">✦</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SALE -->
+<div class="page" id="page-sale">
+  <div style="padding-top:76px;">
+    <div class="sale-hero">
+      <div class="sale-badge">✦ LIMITED TIME OFFER ✦</div>
+      <div class="sale-title">Up to <span>70% OFF</span><br>Her Collection</div>
+      <div class="sale-desc">Massive discounts on premium women's fashion. Don't miss out!</div>
+      <div class="countdown">
+        <div class="cd-item"><div class="cd-num" id="cdH">08</div><div class="cd-lbl">Hours</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-item"><div class="cd-num" id="cdM">45</div><div class="cd-lbl">Minutes</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-item"><div class="cd-num" id="cdS">22</div><div class="cd-lbl">Seconds</div></div>
+      </div>
+      <button class="btn btn-gold" style="font-size:15px;padding:18px 52px;" onclick="showPage('products')">Shop The Sale →</button>
+    </div>
+    <div class="sec">
+      <div class="sec-tag">Sale Items</div>
+      <h2 class="sec-title">Best Deals For Her</h2>
+      <div class="products-grid" id="saleGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">Home</span><span class="breadcrumb-sep">›</span><span>About</span></div>
+    <h1>Our Story</h1>
+    <p>Luxury fashion for women — it's more than clothing, it's identity</p>
+  </div>
+  <div class="sec">
+    <div class="about-grid">
+      <div>
+        <div class="about-img">
+          <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&h=600&fit=crop" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+      </div>
+      <div>
+        <div class="sec-tag">Who We Are</div>
+        <h2 class="sec-title">Crafting Luxury<br>For Her Since 2018</h2>
+        <p class="sec-sub">LUXE was born from a passion for fashion that tells a story. We believe every piece of clothing is a statement — a bold declaration of who you are and who you aspire to be.</p>
+        <p class="sec-sub">Our designers travel the world to find the finest fabrics and most innovative techniques, bringing you collections that are both timeless and contemporary.</p>
+        <div class="values-grid">
+          <div class="val-card"><div class="val-icon">✦</div><div class="val-title">Premium Quality</div><div class="val-text">Only the finest materials, crafted with exceptional attention to detail.</div></div>
+          <div class="val-card"><div class="val-icon">♻</div><div class="val-title">Sustainable</div><div class="val-text">Committed to ethical fashion and sustainable production practices.</div></div>
+          <div class="val-card"><div class="val-icon">🎨</div><div class="val-title">Original Design</div><div class="val-text">Every piece designed in-house by our world-class creative team.</div></div>
+          <div class="val-card"><div class="val-icon">💎</div><div class="val-title">Luxury Experience</div><div class="val-text">Premium experience from browsing to unboxing your order.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="page" id="page-contact">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">Home</span><span class="breadcrumb-sep">›</span><span>Contact</span></div>
+    <h1>Get In Touch</h1>
+    <p>We'd love to hear from you</p>
+  </div>
+  <div class="sec">
+    <div class="contact-grid">
+      <div>
+        <div class="sec-tag">Contact Info</div>
+        <h2 class="sec-title">Let's Talk<br>Luxury</h2>
+        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:32px;">Have a question about sizing, orders, or our collections? Our team is here to help you 7 days a week.</p>
+        <div class="contact-info">
+          <div class="c-card"><div class="c-ico">📍</div><div><div class="c-label">Visit Us</div><div class="c-val">Lahore, Pakistan</div></div></div>
+          <div class="c-card"><div class="c-ico">📞</div><div><div class="c-label">Call Us</div><div class="c-val">+92 300 1234567</div></div></div>
+          <div class="c-card"><div class="c-ico">📧</div><div><div class="c-label">Email Us</div><div class="c-val">hello@luxefashion.pk</div></div></div>
+          <div class="c-card"><div class="c-ico">🕐</div><div><div class="c-label">Working Hours</div><div class="c-val">Mon–Sat: 10am – 8pm</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="sec-tag">Send Message</div>
+        <h2 class="sec-title">We Reply<br>Within 24hrs</h2>
+        <form class="contact-form" onsubmit="event.preventDefault();showToast('Message sent! We will reply soon ✉️')">
+          <div class="form-row">
+            <input class="form-input" placeholder="First Name" required>
+            <input class="form-input" placeholder="Last Name" required>
+          </div>
+          <input class="form-input" type="email" placeholder="Email Address" required>
+          <input class="form-input" placeholder="Phone Number">
+          <select class="form-select">
+            <option>Order Inquiry</option>
+            <option>Product Question</option>
+            <option>Return/Exchange</option>
+            <option>Wholesale</option>
+            <option>Other</option>
+          </select>
+          <textarea class="form-textarea" placeholder="Your message..."></textarea>
+          <button type="submit" class="form-btn">Send Message →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART -->
+<div class="page" id="page-cart">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">Home</span><span class="breadcrumb-sep">›</span><span>Cart</span></div>
+    <h1>Your Cart</h1>
+    <p id="cartCountLabel">8 items in your cart</p>
+  </div>
+  <div class="sec">
+    <div class="cart-grid">
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-summary">
+        <div class="summary-title">Order Summary</div>
+        <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">PKR 105,500</span></div>
+        <div class="summary-row"><span>Shipping</span><span style="color:#00c864;">FREE</span></div>
+        <div class="summary-row"><span>Discount (10%)</span><span style="color:#ff4444;" id="cartDiscount">−PKR 10,550</span></div>
+        <div class="summary-row"><span>Luxury Packaging</span><span>PKR 500</span></div>
+        <div class="summary-row total"><span>Total</span><span id="cartTotal">PKR 95,450</span></div>
+        <button class="checkout-btn" onclick="showToast('Order placed successfully! 🎉')">Proceed to Checkout →</button>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:12px;" onclick="showPage('products')">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WISHLIST -->
+<div class="page" id="page-wishlist">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">Home</span><span class="breadcrumb-sep">›</span><span>Wishlist</span></div>
+    <h1>My Wishlist</h1>
+    <p>Items you love, saved for later</p>
+  </div>
+  <div class="sec">
+    <div class="wishlist-grid" id="wishlistGrid"></div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="page-profile">
+  <div class="page-header">
+    <div class="breadcrumb"><span onclick="showPage('home')">Home</span><span class="breadcrumb-sep">›</span><span>Profile</span></div>
+    <h1>My Account</h1>
+    <p>Manage your orders and preferences</p>
+  </div>
+  <div class="sec">
+    <div class="profile-layout">
+      <div class="profile-sidebar">
+        <div class="profile-avatar">Z</div>
+        <div class="profile-name">Zohaib Malik</div>
+        <div class="profile-email">zm6133971@gmail.com</div>
+        <div class="profile-nav">
+          <button class="prof-nav-btn active">📦 My Orders</button>
+          <button class="prof-nav-btn">❤️ Wishlist</button>
+          <button class="prof-nav-btn">📍 Addresses</button>
+          <button class="prof-nav-btn">💳 Payment</button>
+          <button class="prof-nav-btn">⚙️ Settings</button>
+          <button class="prof-nav-btn" style="color:#ff4444;margin-top:16px;">🚪 Logout</button>
+        </div>
+      </div>
+      <div class="profile-content">
+        <div class="sec-tag">Recent Orders</div>
+        <h2 class="sec-title" style="font-size:28px;margin-bottom:32px;">My Orders</h2>
+        <div class="orders-list">
+          <div class="order-card"><div><div class="order-id">#LX-2025-001</div><div class="order-date">June 20, 2025 · 3 items</div></div><div style="text-align:right;"><div class="order-amount">PKR 27,990</div><div style="margin-top:6px;"><span class="order-status status-delivered">Delivered ✓</span></div></div></div>
+          <div class="order-card"><div><div class="order-id">#LX-2025-002</div><div class="order-date">June 22, 2025 · 2 items</div></div><div style="text-align:right;"><div class="order-amount">PKR 14,300</div><div style="margin-top:6px;"><span class="order-status status-processing">Processing ⏳</span></div></div></div>
+          <div class="order-card"><div><div class="order-id">#LX-2025-003</div><div class="order-date">June 23, 2025 · 4 items</div></div><div style="text-align:right;"><div class="order-amount">PKR 42,500</div><div style="margin-top:6px;"><span class="order-status status-shipped">Shipped 🚚</span></div></div></div>
+          <div class="order-card"><div><div class="order-id">#LX-2025-004</div><div class="order-date">June 25, 2025 · 1 item</div></div><div style="text-align:right;"><div class="order-amount">PKR 9,800</div><div style="margin-top:6px;"><span class="order-status status-processing">Processing ⏳</span></div></div></div>
+          <div class="order-card"><div><div class="order-id">#LX-2025-005</div><div class="order-date">June 26, 2025 · 2 items</div></div><div style="text-align:right;"><div class="order-amount">PKR 21,400</div><div style="margin-top:6px;"><span class="order-status status-shipped">Shipped 🚚</span></div></div></div>
+          <div class="order-card"><div><div class="order-id">#LX-2025-006</div><div class="order-date">June 26, 2025 · 3 items</div></div><div style="text-align:right;"><div class="order-amount">PKR 38,200</div><div style="margin-top:6px;"><span class="order-status status-processing">Processing ⏳</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================
+// ALL PRODUCT IMAGES — DIRECT URLs (Jaisi Tum Chahte Ho)
+// ============================================
+
+// Product names arrays (same as before)
+const shirtNames = [
+  "Silk Satin Blouse", "Linen Button-Up", "Oversized Cotton Shirt", "Silk Chiffon Top",
+  "Cropped Linen Shirt", "Relaxed Oxford Shirt", "Satin Wrap Top", "Cotton Poplin Blouse",
+  "Sheer Silk Shirt", "Oversized Denim Shirt", "Lace Trim Top", "Striped Linen Shirt",
+  "Satin Cami Top", "Button-Down Silk Blouse", "Relaxed Tencel Shirt", "Sleeveless Linen Top",
+  "Puff Sleeve Blouse", "Silk Satin Shirt", "Cotton Voile Top", "Linen Blend Shirt",
+  "Ruffle Sleeve Top", "Satin Cowl Neck", "Oversized Poplin Shirt", "Silk Shell Top",
+  "Linen Tunic Top", "Cotton Lace Top", "Satin Bow Blouse", "Relaxed Linen Shirt",
+  "Silk Georgette Top", "V-Neck Satin Blouse"
+];
+
+const trouserNames = [
+  "Linen Wide Leg Trousers", "Silk Satin Pants", "Cotton Tailored Trousers", "Pleated Linen Pants",
+  "Slim Fit Trousers", "Wide Leg Silk Pants", "Cropped Linen Trousers", "High Waist Tailored Pants",
+  "Relaxed Linen Trousers", "Satin Cargo Pants", "Pleated Silk Pants", "Cotton Straight Leg",
+  "Wide Leg Cotton Pants", "Linen Blend Trousers", "Satin Wide Leg", "Cropped Tailored Pants",
+  "High Rise Linen Pants", "Silk Relaxed Trousers", "Cotton Cargo Pants", "Pleated Wide Leg",
+  "Linen Slim Pants", "Satin Straight Leg", "Cropped Linen Pants", "High Waist Silk Pants",
+  "Relaxed Cotton Trousers", "Wide Leg Linen Pants", "Tailored Silk Trousers", "Linen Blend Wide Leg",
+  "Satin High Rise", "Cotton Linen Trousers"
+];
+
+const bagNames = [
+  "Leather Shoulder Bag", "Satin Mini Bag", "Structured Leather Tote", "Quilted Crossbody",
+  "Leather Bucket Bag", "Satin Clutch", "Oversized Leather Tote", "Chain Strap Crossbody",
+  "Leather Belt Bag", "Satin Evening Bag", "Woven Leather Tote", "Mini Leather Crossbody",
+  "Leather Briefcase Bag", "Satin Knot Clutch", "Oversized Satin Tote", "Leather Hobo Bag",
+  "Quilted Leather Bag", "Satin Pearl Bag", "Leather Foldover Clutch", "Chain Link Crossbody",
+  "Leather Drawstring Bag", "Satin Flap Bag", "Basket Woven Tote", "Leather Crossbody Bag",
+  "Satin Embellished Clutch", "Leather Top Handle", "Satin Mini Tote", "Leather Camera Bag",
+  "Woven Leather Crossbody", "Satin Box Bag"
+];
+
+const sunglassNames = [
+  "Gold Aviator Sunglasses", "Oversized Cat Eye", "Vintage Round Sunglasses", "Geometric Gold Frames",
+  "Cat Eye Gold Sunglasses", "Oversized Square Frames", "Gold Rim Aviator", "Round Metal Sunglasses",
+  "Rectangle Gold Sunglasses", "Heart Shaped Sunglasses", "Oversized Butterfly", "Gold Thin Frame",
+  "Vintage Metal Sunglasses", "Oversized Round Gold", "Cat Eye Metal Frames", "Gold Aviator Oversized",
+  "Rectangle Thin Frame", "Oversized Geometric", "Gold Rim Round", "Square Metal Sunglasses",
+  "Oversized Gold Aviator", "Butterfly Gold Frames", "Vintage Cat Eye", "Round Oversized Gold",
+  "Geometric Metal Frames", "Gold Shield Sunglasses", "Oversized Vintage Round", "Rectangle Gold Rim",
+  "Cat Eye Oversized", "Gold Metal Aviator"
+];
+
+// ============================================
+// 🔥 DIRECT IMAGE URLS — HAR PRODUCT KI ALAG URL
+// ============================================
+const photoUrls = {
+  // ===== TOPS =====
+  'Silk Satin Blouse': 'https://images.unsplash.com/photo-1704775991545-fc0507822fea?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fFNpbGslMjBTYXRpbiUyMEJsb3VzZXxlbnwwfHwwfHx8MA%3D%3D',
+  'Linen Button-Up': 'https://images.unsplash.com/photo-1776633733518-d81137214dc9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fExpbmVuJTIwQnV0dG9uLVVwfGVufDB8fDB8fHww',
+  'Oversized Cotton Shirt': 'https://images.unsplash.com/photo-1760551600149-0d5b1ac496a8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fE92ZXJzaXplZCUyMENvdHRvbiUyMFNoaXJ0fGVufDB8fDB8fHww',
+  'Silk Chiffon Top': 'https://images.unsplash.com/photo-1591911894784-84dbae55cd4d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTcyfHxTaWxrJTIwQ2hpZmZvbiUyMFRvcHxlbnwwfHwwfHx8MA%3D%3D',
+  'Cropped Linen Shirt': 'https://images.unsplash.com/photo-1760551600788-46c6366557b8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzF8fENyb3BwZWQlMjBMaW5lbiUyMFNoaXJ0fGVufDB8fDB8fHww',
+  'Relaxed Oxford Shirt': 'https://images.unsplash.com/photo-1753395298688-8ce87bcac6e9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OTl8fFJlbGF4ZWQlMjBPeGZvcmQlMjBTaGlydCUyMHdvbWVuc3xlbnwwfHwwfHx8MA%3D%3D',
+  'Satin Wrap Top': 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=340&fit=crop&q=80',
+  'Cotton Poplin Blouse': 'https://images.unsplash.com/photo-1731758996362-dc62d1592741?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODR8fENvdHRvbiUyMFBvcGxpbiUyMEJsb3VzZXxlbnwwfHwwfHx8MA%3D%3D',
+  'Sheer Silk Shirt': 'https://images.unsplash.com/photo-1626497764746-6dc36546b388?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8U2hlZXIlMjBTaWxrJTIwU2hpcnR8ZW58MHx8MHx8fDA%3D',
+  'Oversized Denim Shirt': 'https://images.unsplash.com/photo-1602531986441-5dd44f6996a3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fE92ZXJzaXplZCUyMERlbmltJTIwU2hpcnR8ZW58MHx8MHx8fDA%3D',
+  'Lace Trim Top': 'https://images.unsplash.com/photo-1718725009952-c4f5e502eb6e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nzd8fExhY2UlMjBUcmltJTIwVG9wfGVufDB8fDB8fHww',
+  'Striped Linen Shirt': 'https://images.unsplash.com/photo-1630316813204-211f1eb1b284?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fFN0cmlwZWQlMjBMaW5lbiUyMFNoaXJ0fGVufDB8fDB8fHww',
+  'Satin Cami Top': 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=340&fit=crop&q=80',
+  'Button-Down Silk Blouse': 'https://images.unsplash.com/photo-1664552455995-ac507f7dddad?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjQ0fHxidXR0b24tZG93biUyMHNpbGslMjBibG91c2V8ZW58MHx8MHx8fDA%3D',
+  'Relaxed Tencel Shirt': 'https://images.unsplash.com/photo-1713607507735-e1cf1d031a29?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fFJlbGF4ZWQlMjBUZW5jZWwlMjBTaGlydHxlbnwwfHwwfHx8MA%3D%3D',
+  'Sleeveless Linen Top': 'https://images.unsplash.com/photo-1621576724214-614d3832acb5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njh8fFNsZWV2ZWxlc3MlMjBMaW5lbiUyMFRvcCUyMHNoaXJ0c3xlbnwwfHwwfHx8MA%3D%3D',
+  'Puff Sleeve Blouse': 'https://images.unsplash.com/photo-1704775990821-23af362863d9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8UHVmZiUyMFNsZWV2ZSUyMEJsb3VzZXxlbnwwfHwwfHx8MA%3D%3D',
+  'Silk Satin Shirt': 'https://plus.unsplash.com/premium_photo-1691622499404-f076050436a3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDF8fFNpbGslMjBTYXRpbiUyMFNoaXJ0fGVufDB8fDB8fHwwttps://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=340&fit=crop&q=80',
+  'Cotton Voile Top': 'https://images.unsplash.com/photo-1727742152836-40e0e2186101?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fENvdHRvbiUyMFZvaWxlJTIwVG9wfGVufDB8fDB8fHww',
+  'Linen Blend Shirt': 'https://images.unsplash.com/photo-1738052950965-5336c6abb1cb?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  'Ruffle Sleeve Top': 'https://images.unsplash.com/photo-1579013727574-915ceb05ed6c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  'Satin Cowl Neck': 'https://images.unsplash.com/photo-1708121454064-6bc7b367708a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fFNhdGluJTIwQ293bCUyME5lY2t8ZW58MHx8MHx8fDA%3D',
+  'Oversized Poplin Shirt': 'https://images.unsplash.com/photo-1755376224231-3fc80007fb8e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fE92ZXJzaXplZCUyMFBvcGxpbiUyMFNoaXJ0fGVufDB8fDB8fHww',
+  'Silk Shell Top': 'https://images.unsplash.com/photo-1677069536259-c0c7a82059b3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fFNpbGslMjBTaGVsbCUyMFRvcHxlbnwwfHwwfHx8MA%3D%3D',
+  'Linen Tunic Top': 'https://media.istockphoto.com/id/991856742/photo/white-clothes-isolated.webp?a=1&b=1&s=612x612&w=0&k=20&c=Vta-IInnSseNq4nwiEh2eCtE3LwRjcQT6Xbl4uu0-os=',
+  'Cotton Lace Top': 'https://images.unsplash.com/photo-1635359037330-4ead33d99bc9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzF8fENvdHRvbiUyMExhY2UlMjBUb3B8ZW58MHx8MHx8fDA%3D',
+  'Satin Bow Blouse': 'https://images.unsplash.com/photo-1741604703016-f8e96872fa3b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzV8fFNhdGluJTIwQm93JTIwQmxvdXNlfGVufDB8fDB8fHww',
+  'Relaxed Linen Shirt': 'https://plus.unsplash.com/premium_photo-1661380827487-0497159932b7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTN8fFJlbGF4ZWQlMjBMaW5lbiUyMFNoaXJ0fGVufDB8fDB8fHww',
+  'Silk Georgette Top': 'https://media.istockphoto.com/id/613338172/photo/dress-on-clothes-rack.jpg?s=612x612&w=0&k=20&c=EPAseg6VwiMkxEIb1uDvEyF61iV9S1HfyY58tvMHAPk=',
+  'V-Neck Satin Blouse': 'https://images.unsplash.com/photo-1727834776020-06233f071a2a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDZ8fFYtTmVjayUyMFNhdGluJTIwQmxvdXNlfGVufDB8fDB8fHww',
+
+  // ===== TROUSERS =====
+  'Linen Wide Leg Trousers': 'https://images.unsplash.com/photo-1663699950625-424391e11ec9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fExpbmVuJTIwV2lkZSUyMExlZyUyMFRyb3VzZXJzJTIwaW1nJTIwanVzdCUyMHRyb3plcnN8ZW58MHx8MHx8fDA%3D',
+  'Silk Satin Pants': 'https://media.istockphoto.com/id/2248854433/photo/female-model-wearing-wide-silk-beige-trousers-classic-and-timeless-simple-fashion-studio-shot.jpg?s=612x612&w=0&k=20&c=FoFp7BjZvSR3sKrApvetZ0eW0eS-Y7LXeFPZOgRN3SY=',
+  'Cotton Tailored Trousers': 'https://images.unsplash.com/photo-1654512697735-d7ff21350443?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fENvdHRvbiUyMFRhaWxvcmVkJTIwVHJvdXNlcnN8ZW58MHx8MHx8fDA%3D',
+  'Pleated Linen Pants': 'https://images.unsplash.com/photo-1688535823258-9927ab196d34?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fFBsZWF0ZWQlMjBMaW5lbiUyMFBhbnRzfGVufDB8fDB8fHww',
+  'Slim Fit Trousers': 'https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8U2xpbSUyMEZpdCUyMFRyb3VzZXJzJTIwZm9yJTIwd29tZW5zfGVufDB8fDB8fHww',
+  'Wide Leg Silk Pants': 'https://plus.unsplash.com/premium_photo-1664464228919-5768bdfea28d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTYwfHxXaWRlJTIwTGVnJTIwU2lsayUyMFBhbnRzfGVufDB8fDB8fHww',
+  'Cropped Linen Trousers': 'https://images.unsplash.com/photo-1584213582269-91d4c3815130?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Q3JvcHBlZCUyMExpbmVuJTIwVHJvdXNlcnN8ZW58MHx8MHx8fDA%3D',
+  'High Waist Tailored Pants': 'https://media.istockphoto.com/id/2279380486/photo/close-up-of-fashion-model-in-white-striped-navy-high-waisted-palazzo-trousers-stylish.webp?a=1&b=1&s=612x612&w=0&k=20&c=rrJ5qiVp31scYlnfSW8_UjR1KXSKNw8AqoJTKZxH15I=',
+  'Relaxed Linen Trousers': 'https://images.unsplash.com/photo-1779675399840-fe2af673bf5e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8UmVsYXhlZCUyMExpbmVuJTIwVHJvdXNlcnN8ZW58MHx8MHx8fDA%3D',
+  'Satin Cargo Pants': 'https://plus.unsplash.com/premium_photo-1708110768383-608e9fba949c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8U2F0aW4lMjBDYXJnbyUyMFBhbnRzfGVufDB8fDB8fHww',
+  'Pleated Silk Pants': 'https://images.unsplash.com/photo-1729218620604-b3af92a5bd4a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fFBsZWF0ZWQlMjBTaWxrJTIwUGFudHN8ZW58MHx8MHx8fDA%3D',
+  'Cotton Straight Leg': 'https://images.unsplash.com/photo-1667829705955-279308e7fc12?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fENvdHRvbiUyMFN0cmFpZ2h0JTIwTGVnfGVufDB8fDB8fHww',
+  'Wide Leg Cotton Pants': 'https://plus.unsplash.com/premium_photo-1691622500373-da5adfe5b2ff?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8V2lkZSUyMExlZyUyMENvdHRvbiUyMFBhbnRzfGVufDB8fDB8fHww',
+  'Linen Blend Trousers': 'https://images.unsplash.com/photo-1652511291931-f2f310932ce7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzN8fExpbmVuJTIwQmxlbmQlMjBUcm91c2Vyc3xlbnwwfHwwfHx8MA%3D%3D',
+  'Satin Wide Leg': 'https://images.unsplash.com/photo-1602910343437-b2c23d5bebb3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTEwfHxTYXRpbiUyMFdpZGUlMjBMZWd8ZW58MHx8MHx8fDA%3D',
+  'Cropped Tailored Pants': 'https://images.unsplash.com/photo-1779406166955-371cb625567d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fENyb3BwZWQlMjBUYWlsb3JlZCUyMFBhbnRzfGVufDB8fDB8fHww',
+  'High Rise Linen Pants': 'https://images.unsplash.com/photo-1713145873571-46704c921784?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODN8fEhpZ2glMjBSaXNlJTIwTGluZW4lMjBQYW50c3xlbnwwfHwwfHx8MA%3D%3D',
+  'Silk Relaxed Trousers': 'https://images.unsplash.com/photo-1780566758158-86894dcae8e8?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTM1fHxTaWxrJTIwUmVsYXhlZCUyMFRyb3VzZXJzfGVufDB8fDB8fHww',
+  'Cotton Cargo Pants': 'https://plus.unsplash.com/premium_photo-1703118952690-bb3d1560efb9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Q290dG9uJTIwQ2FyZ28lMjBQYW50c3xlbnwwfHwwfHx8MA%3D%3D',
+  'Pleated Wide Leg': 'https://images.unsplash.com/photo-1762342678733-b0a6b50f757b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fFBsZWF0ZWQlMjBXaWRlJTIwTGVnfGVufDB8fDB8fHww',
+  'Linen Slim Pants': 'https://images.unsplash.com/photo-1619378608033-6530edd3c09c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjR8fExpbmVuJTIwU2xpbSUyMFBhbnRzfGVufDB8fDB8fHww',
+  'Satin Straight Leg': 'https://media.istockphoto.com/id/1411053907/photo/studio-shot-of-female-model-wearing-black-satin-wide-trousers.jpg?s=612x612&w=0&k=20&c=KHv313PDMh-wtUVc8spYh2iXNKKl8VSVAI4OEmY1Ww0=',
+  'Cropped Linen Pants': 'https://images.unsplash.com/photo-1566496895667-c0a682042e8a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  'Relaxed Cotton Trousers': 'https://images.unsplash.com/photo-1686512486723-3be8202673ff?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fFJlbGF4ZWQlMjBDb3R0b24lMjBUcm91c2Vyc3xlbnwwfHwwfHx8MA%3D%3D',
+  'Wide Leg Linen Pants': 'https://plus.unsplash.com/premium_photo-1769105242805-1f0ee8399b31?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nzd8fFdpZGUlMjBMZWclMjBMaW5lbiUyMFBhbnRzfGVufDB8fDB8fHww',
+  'Tailored Silk Trousers': 'https://media.istockphoto.com/id/2252487959/photo/studio-shot-of-female-model-wearing-white-satin-wide-trousers-and-white-bow-tie-neck-blouse.jpg?s=2048x2048&w=is&k=20&c=cn_AJkgzYWBHxV6rwMXVdKKSaWFUhNrLBZJfN-FM8ds=',
+  'Satin High Rise': 'https://images.unsplash.com/photo-1770294758967-6ed2b93ce42c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTA5fHxTYXRpbiUyMEhpZ2glMjBSaXNlfGVufDB8fDB8fHww',
+  'Cotton Linen Trousers': 'https://images.unsplash.com/photo-1667586740136-edc51c57838e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fENvdHRvbiUyMExpbmVuJTIwVHJvdXNlcnN8ZW58MHx8MHx8fDA%3D',
+
+  // ===== HANDBAGS -
+
+'Leather Shoulder Bag':     'https://images.unsplash.com/photo-1624687943971-e86af76d57de?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8TGVhdGhlciUyMFNob3VsZGVyJTIwQmFnfGVufDB8fDB8fHww',
+'Satin Mini Bag':           'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?w=400&h=340&fit=crop',
+'Structured Leather Tote':  'https://images.unsplash.com/photo-1713425884598-88fc6e5e0aad?q=80&w=711&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+'Quilted Crossbody':        'https://media.istockphoto.com/id/2253228290/photo/women-fashionable-hand-bag-isolated-on-white-background-cutout-with-soft-shadow.jpg?s=612x612&w=0&k=20&c=uW4c7YxsHpY8egS8F4SitkAUP4A6tJqFncEHkifEhGM=',
+'Leather Bucket Bag':       'https://images.pexels.com/photos/3777932/pexels-photo-3777932.jpeg?w=400&h=340&fit=crop',
+'Satin Clutch':             'https://images.unsplash.com/photo-1663075385910-577272adf560?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDZ8fFNhdGluJTIwQ2x1dGNofGVufDB8fDB8fHww',
+'Oversized Leather Tote':   'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?w=400&h=340&fit=crop',
+'Chain Strap Crossbody':    'https://media.istockphoto.com/id/2253024498/photo/womens-leather-cocktail-bags-on-metal-chains-fashionable-small-womens-bags.jpg?s=612x612&w=0&k=20&c=PxcTG5_k1W5b03z1qCXFFa_7Uk0vpEQvQA_XDU0TMrE=',
+'Leather Belt Bag':         'https://images.unsplash.com/photo-1542736403-9f0f558c7659?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nzh8fExlYXRoZXIlMjBCZWx0JTIwQmFnfGVufDB8fDB8fHww',
+'Satin Evening Bag':        'https://images.unsplash.com/photo-1594631407324-fb0a19101f77?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fFNhdGluJTIwRXZlbmluZyUyMEJhZ3xlbnwwfHwwfHx8MA%3D%3D',
+'Woven Leather Tote':       'https://images.pexels.com/photos/904350/pexels-photo-904350.jpeg?w=400&h=340&fit=crop',
+'Mini Leather Crossbody':   'https://images.unsplash.com/photo-1712577787840-bf5c510ad118?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fE1pbmklMjBMZWF0aGVyJTIwQ3Jvc3Nib2R5fGVufDB8fDB8fHww',
+'Leather Briefcase Bag':    'https://images.unsplash.com/photo-1510682469697-f2953374f076?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8TGVhdGhlciUyMEJyaWVmY2FzZSUyMEJhZ3xlbnwwfHwwfHx8MA%3D%3D',
+'Satin Knot Clutch':        'https://plus.unsplash.com/premium_photo-1693221162032-4dc4e00180ba?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8U2F0aW4lMjBLbm90JTIwQ2x1dGNofGVufDB8fDB8fHww',
+'Oversized Satin Tote':     'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?w=400&h=340&fit=crop',
+'Leather Hobo Bag':         'https://images.unsplash.com/photo-1665832102484-9163e4d51ca9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fExlYXRoZXIlMjBIb2JvJTIwQmFnfGVufDB8fDB8fHww',
+'Quilted Leather Bag':      'https://images.pexels.com/photos/6650009/pexels-photo-6650009.jpeg?w=400&h=340&fit=crop',
+'Satin Pearl Bag':          'https://images.unsplash.com/photo-1722510825571-8cdd1fe98ba4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8U2F0aW4lMjBQZWFybCUyMEJhZ3xlbnwwfHwwfHx8MA%3D%3D',
+'Leather Foldover Clutch':  'https://images.unsplash.com/photo-1677326764514-911f3cba031b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fExlYXRoZXIlMjBGb2xkb3ZlciUyMENsdXRjaHxlbnwwfHwwfHx8MA%3D%3D',
+'Chain Link Crossbody':     'https://media.istockphoto.com/id/2254806771/photo/luxury-black-quilted-leather-shoulder-bag-with-gold-chain-isolated-on-white-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=3GPQJARuXv_7fjSPZLyOASvhysIg3shsx2u-T4zJhd0=',
+'Leather Drawstring Bag':   'https://images.unsplash.com/photo-1760624294469-550753ec203a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjR8fExlYXRoZXIlMjBEcmF3c3RyaW5nJTIwQmFnfGVufDB8fDB8fHww',
+'Satin Flap Bag':           'https://media.istockphoto.com/id/471767981/photo/woman-handbag-gray-background.jpg?s=612x612&w=0&k=20&c=U58Qcz1RiAmFVBplxFqXzaPBFN-4DLTEtTABR98uSYA=',
+'Basket Woven Tote':        'https://images.unsplash.com/photo-1674591409662-55f4f2c55fff?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8QmFza2V0JTIwV292ZW4lMjBUb3RlfGVufDB8fDB8fHww',
+'Leather Crossbody Bag':    'https://images.unsplash.com/photo-1709898838174-83c3e155654c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fExlYXRoZXIlMjBDcm9zc2JvZHklMjBCYWd8ZW58MHx8MHx8fDA%3D',
+'Satin Embellished Clutch': 'https://images.pexels.com/photos/2081199/pexels-photo-2081199.jpeg?w=400&h=340&fit=crop',
+'Leather Top Handle':       'https://media.istockphoto.com/id/2278835960/photo/beige-small-bag-on-color-background-top-view.jpg?s=612x612&w=0&k=20&c=e7F5RkcKUgbCbWwOadjszxW3iWUnWl020Y2ZYwagNGA=',
+'Satin Mini Tote':          'https://plus.unsplash.com/premium_photo-1673384389924-097135cbf1cd?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjF8fFNhdGluJTIwTWluaSUyMFRvdGV8ZW58MHx8MHx8fDA%3D',
+'Leather Camera Bag':       'https://plus.unsplash.com/premium_photo-1762254767907-0d981ff1662e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fExlYXRoZXIlMjBDYW1lcmElMjBCYWd8ZW58MHx8MHx8fDA%3D',
+'Woven Leather Crossbody':  'https://plus.unsplash.com/premium_photo-1723543203814-e3e43f121204?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fFdvdmVuJTIwTGVhdGhlciUyMENyb3NzYm9keXxlbnwwfHwwfHx8MA%3D%3D',
+'Satin Box Bag':            'https://images.unsplash.com/flagged/photo-1553802922-e345434156e6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fFNhdGluJTIwQm94JTIwQmFnfGVufDB8fDB8fHww',
+// Sunn Glesses - UPDATED UNSPLASH LINKS ✅
+'Gold Aviator Sunglasses':    'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400&h=340&fit=crop&q=80',
+'Oversized Cat Eye':          'https://images.unsplash.com/photo-1634559696782-88ec83d89791?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fE92ZXJzaXplZCUyMENhdCUyMEV5ZSUyMGdsYXNzZXN8ZW58MHx8MHx8fDA%3D',
+'Vintage Round Sunglasses':   'https://images.unsplash.com/photo-1625591340248-6d289000f96a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fFZpbnRhZ2UlMjBSb3VuZCUyMFN1bmdsYXNzZXN8ZW58MHx8MHx8fDA%3D',
+'Geometric Gold Frames':      'https://images.unsplash.com/photo-1691191479962-d776b9400c71?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fEdlb21ldHJpYyUyMEdvbGQlMjBGcmFtZXMlMjBnbGFzc2VzfGVufDB8fDB8fHww',
+'Cat Eye Gold Sunglasses':    'https://plus.unsplash.com/premium_photo-1682125610568-5b5b30ecc937?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fENhdCUyMEV5ZSUyMEdvbGQlMjBTdW5nbGFzc2VzfGVufDB8fDB8fHww',
+'Oversized Square Frames':    'https://images.unsplash.com/photo-1641977937814-160ab3062a23?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fE92ZXJzaXplZCUyMFNxdWFyZSUyMEZyYW1lc3xlbnwwfHwwfHx8MA%3D%3D',
+'Gold Rim Aviator':           'https://images.unsplash.com/photo-1509695507497-903c140c43b0?w=400&h=340&fit=crop&q=80',
+'Round Metal Sunglasses':     'https://images.unsplash.com/photo-1508296695146-257a814070b4?w=400&h=340&fit=crop&q=80',
+'Rectangle Gold Sunglasses':  'https://media.istockphoto.com/id/2271079048/photo/woman-with-long-brown-hair-she-wears-stylish-sunglasses-with-gold-frames-the-woman-holds-her.jpg?s=612x612&w=0&k=20&c=1sDRqGzGJzlwqr6DHsBy3vFHsM8uYZvPzbnOfoGZwpw=',
+'Heart Shaped Sunglasses':    'https://images.unsplash.com/photo-1665499403166-8ad7d367a43b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fEhlYXJ0JTIwU2hhcGVkJTIwU3VuZ2xhc3Nlc3xlbnwwfHwwfHx8MA%3D%3D',
+'Oversized Butterfly':        'https://media.istockphoto.com/id/1016398128/photo/fashionable-sunglasses.jpg?s=612x612&w=0&k=20&c=vVkBvFNYCqDlZNMNST08fAZZ2e-4uct2t_UWgNUAyZk=',
+'Gold Thin Frame':            'https://images.unsplash.com/photo-1774791697891-00796be50f2b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fEdvbGQlMjBUaGluJTIwRnJhbWUlMjBzdW5nbGFzc2VzfGVufDB8fDB8fHww',
+'Vintage Metal Sunglasses':   'https://plus.unsplash.com/premium_photo-1755755755925-090d37fb7917?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fFZpbnRhZ2UlMjBNZXRhbCUyMFN1bmdsYXNzZXN8ZW58MHx8MHx8fDA%3D',
+'Oversized Round Gold':       'https://media.istockphoto.com/id/2175964727/photo/a-small-white-chihuahua-dog-with-glasses.jpg?s=612x612&w=0&k=20&c=BNsOVrpQt0_pnOh9jX71frA8IAFEPpbFgjX4nfxVjac=',
+'Cat Eye Metal Frames':       'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=340&fit=crop&q=80',
+'Gold Aviator Oversized':     'https://images.unsplash.com/photo-1509695507497-903c140c43b0?w=400&h=340&fit=crop&q=80',
+'Rectangle Thin Frame':       'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400&h=340&fit=crop&q=80',
+'Oversized Geometric':        'https://images.unsplash.com/photo-1508296695146-257a814070b4?w=400&h=340&fit=crop&q=80',
+'Gold Rim Round':             'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400&h=340&fit=crop&q=80',
+'Square Metal Sunglasses':    'https://images.unsplash.com/photo-1614521911490-7149284cc02a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTl8fFNxdWFyZSUyME1ldGFsJTIwU3VuZ2xhc3Nlc3xlbnwwfHwwfHx8MA%3D%3D',
+'Oversized Gold Aviator':     'https://images.unsplash.com/photo-1577803645773-f96470509666?w=400&h=340&fit=crop&q=80',
+'Butterfly Gold Frames':      'https://media.istockphoto.com/id/1171717377/photo/sunglasses-and-shells-sunglasses-on-the-beach.webp?a=1&b=1&s=612x612&w=0&k=20&c=7-BjhGoluOtTaDDmsBZVInC5GYyPIG4JqELPoEZrsos=',
+'Vintage Cat Eye':            'https://media.istockphoto.com/id/1167708168/photo/black-cats-eye-sunglasses-on-a-towel.jpg?s=612x612&w=0&k=20&c=cwAaQglwsXKH9HURVykpi0muVOAJXhWsD96qx1u_dmA=',
+'Round Oversized Gold':       'https://media.istockphoto.com/id/1302283514/photo/sunglasses-on-a-white-background-isolate-healthy-eyes.webp?a=1&b=1&s=612x612&w=0&k=20&c=0QScAZxHNUa12lhfWxzG683J7fXRFTnLz0T0LXWDsAQ=',
+'Geometric Metal Frames':     'https://images.unsplash.com/photo-1509695507497-903c140c43b0?w=400&h=340&fit=crop&q=80',
+'Gold Shield Sunglasses':     'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400&h=340&fit=crop&q=80',
+'Oversized Vintage Round':    'https://images.unsplash.com/photo-1508296695146-257a814070b4?w=400&h=340&fit=crop&q=80',
+'Rectangle Gold Rim':         'https://media.istockphoto.com/id/494860243/photo/eyeglasses-tinted.webp?a=1&b=1&s=612x612&w=0&k=20&c=0zOXDwWxxxTLMYiaUl9kkqg2Av0FJPpN4aHHk8PceSc=',
+'Cat Eye Oversized':          'https://media.istockphoto.com/id/478699748/photo/sunglasses.webp?a=1&b=1&s=612x612&w=0&k=20&c=V_mzQ5ZglXVv8wad9K6dmOVdYSujSBeEl5rJ9lL4WDs=',
+'Gold Metal Aviator':         'https://media.istockphoto.com/id/518096689/photo/you-like-my-shades.jpg?s=612x612&w=0&k=20&c=esxBVqwhUgMPiKfH8Hhbk83vqgvYOEjW1eWtntx5Bg0=',
+};
+
+// Generate products
+function generateProducts() {
+  const products = [];
+  const categories = [
+    { name: 'tops', label: 'Tops', names: shirtNames, priceMin: 3500, priceMax: 8500, oldMult: 1.4 },
+    { name: 'trousers', label: 'Trousers', names: trouserNames, priceMin: 4500, priceMax: 12000, oldMult: 1.5 },
+    { name: 'bags', label: 'Handbags', names: bagNames, priceMin: 6000, priceMax: 25000, oldMult: 1.6 },
+    { name: 'sunglasses', label: 'Sunglasses', names: sunglassNames, priceMin: 2000, priceMax: 8000, oldMult: 1.3 }
+  ];
+
+  let id = 0;
+  categories.forEach((cat) => {
+    cat.names.forEach((name) => {
+      id++;
+      const price = Math.round(cat.priceMin + Math.random() * (cat.priceMax - cat.priceMin));
+      const oldPrice = Math.round(price * cat.oldMult);
+      // 🔥 DIRECT URL — Bilkul jaisi tum chahte ho!
+      const img = photoUrls[name] || 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=340&fit=crop&q=80';
+      products.push({
+        id: id,
+        name: name,
+        category: cat.name,
+        label: cat.label,
+        price: price,
+        oldPrice: oldPrice,
+        img: img,
+        inCart: false,
+        inWishlist: false
+      });
+    });
+  });
+  return products;
+}
+
+let allProducts = generateProducts();
+let cart = [];
+let wishlist = [];
+let currentFilter = 'all';
+
+function initCollections() {
+  const shuffled = [...allProducts].sort(() => Math.random() - 0.5);
+  cart = shuffled.slice(0, 8);
+  const notInCart = allProducts.filter(p => !cart.includes(p));
+  const shuffledWish = [...notInCart].sort(() => Math.random() - 0.5);
+  wishlist = shuffledWish.slice(0, 6);
+}
+initCollections();
+
+function getFilteredProducts() {
+  if (currentFilter === 'all') return allProducts;
+  if (currentFilter === 'sale') {
+    return allProducts.filter(p => p.oldPrice > p.price * 1.15);
+  }
+  return allProducts.filter(p => p.category === currentFilter);
+}
+
+function createProductCard(p) {
+  const inCart = cart.some(c => c.id === p.id);
+  const inWish = wishlist.some(w => w.id === p.id);
+  const discount = Math.round((1 - p.price / p.oldPrice) * 100);
+  const isSale = discount > 15;
+  return `
+    <div class="prod-card">
+      <img class="prod-img" src="${p.img}" loading="lazy">
+      <div class="prod-body">
+        <div class="prod-cat">${p.label}</div>
+        <div class="prod-name">${p.name}</div>
+        <div>
+          <span class="prod-price">PKR ${p.price.toLocaleString()}</span>
+          <span class="prod-old">${p.oldPrice.toLocaleString()}</span>
+          ${isSale ? `<span style="color:#ff4444;font-size:11px;margin-left:6px;">${discount}% OFF</span>` : ''}
+        </div>
+        <div class="prod-actions">
+          <button class="prod-btn prod-btn-buy" onclick="toggleCart(${p.id})">
+            ${inCart ? 'Remove' : 'Add to Cart'}
+          </button>
+          <button class="prod-btn prod-btn-wish" onclick="toggleWishlist(${p.id})">
+            ${inWish ? '♥' : '♡'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  const filtered = getFilteredProducts();
+  grid.innerHTML = filtered.map(p => createProductCard(p)).join('');
+}
+
+function renderFeatured() {
+  const grid = document.getElementById('featuredGrid');
+  const featured = allProducts.slice(0, 8);
+  grid.innerHTML = featured.map(p => createProductCard(p)).join('');
+}
+
+function renderSale() {
+  const grid = document.getElementById('saleGrid');
+  const saleItems = allProducts.filter(p => p.oldPrice > p.price * 1.15).slice(0, 10);
+  if (saleItems.length < 8) {
+    const extras = allProducts.filter(p => !saleItems.includes(p)).slice(0, 8 - saleItems.length);
+    saleItems.push(...extras);
+  }
+  grid.innerHTML = saleItems.map(p => createProductCard(p)).join('');
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  if (cart.length === 0) {
+    container.innerHTML = `<p style="color:var(--muted);padding:40px;text-align:center;">Your cart is empty. Start shopping! 🛍</p>`;
+    document.getElementById('cartCountLabel').textContent = '0 items in your cart';
+    document.getElementById('cartCount').textContent = '0';
+    document.getElementById('cartSubtotal').textContent = 'PKR 0';
+    document.getElementById('cartDiscount').textContent = 'PKR 0';
+    document.getElementById('cartTotal').textContent = 'PKR 0';
+    return;
+  }
+  let subtotal = 0;
+  let html = '';
+  cart.forEach((p, idx) => {
+    const qty = 1;
+    const price = p.price * qty;
+    subtotal += price;
+    html += `
+      <div class="cart-item">
+        <img class="cart-item-img" src="${p.img}" loading="lazy">
+        <div>
+          <div class="cart-item-name">${p.name}</div>
+          <div class="cart-item-cat">${p.label} · One Size</div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+            <span class="qty-num">${qty}</span>
+            <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+          </div>
+        </div>
+        <div class="cart-item-price">PKR ${(p.price * qty).toLocaleString()}</div>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+  const discount = Math.round(subtotal * 0.1);
+  const total = subtotal - discount + 500;
+  document.getElementById('cartCountLabel').textContent = `${cart.length} items in your cart`;
+  document.getElementById('cartCount').textContent = cart.length;
+  document.getElementById('cartSubtotal').textContent = `PKR ${subtotal.toLocaleString()}`;
+  document.getElementById('cartDiscount').textContent = `−PKR ${discount.toLocaleString()}`;
+  document.getElementById('cartTotal').textContent = `PKR ${total.toLocaleString()}`;
+}
+
+function renderWishlist() {
+  const grid = document.getElementById('wishlistGrid');
+  if (wishlist.length === 0) {
+    grid.innerHTML = `<p style="color:var(--muted);padding:40px;text-align:center;grid-column:1/-1;">Your wishlist is empty. Start saving your favorites! ♡</p>`;
+    return;
+  }
+  grid.innerHTML = wishlist.map(p => createProductCard(p)).join('');
+}
+
+function toggleCart(id) {
+  const idx = cart.findIndex(c => c.id === id);
+  if (idx > -1) {
+    cart.splice(idx, 1);
+    showToast('Removed from cart');
+  } else {
+    const p = allProducts.find(pr => pr.id === id);
+    if (p) {
+      cart.push({ ...p });
+      showToast('Added to cart! 🛍');
+    }
+  }
+  renderCart();
+  renderProducts();
+  renderFeatured();
+  renderSale();
+  renderWishlist();
+  document.getElementById('cartCount').textContent = cart.length;
+}
+
+function toggleWishlist(id) {
+  const idx = wishlist.findIndex(w => w.id === id);
+  if (idx > -1) {
+    wishlist.splice(idx, 1);
+    showToast('Removed from wishlist');
+  } else {
+    const p = allProducts.find(pr => pr.id === id);
+    if (p) {
+      wishlist.push({ ...p });
+      showToast('Added to wishlist! ♡');
+    }
+  }
+  renderWishlist();
+  renderProducts();
+  renderFeatured();
+  renderSale();
+}
+
+function changeQty(idx, dir) {
+  renderCart();
+}
+
+function setFilter(btn, filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = filter;
+  renderProducts();
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById('page-' + id);
+  if (page) {
+    page.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  if (id === 'cart') renderCart();
+  if (id === 'wishlist') renderWishlist();
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// Countdown
+let h = 8, m = 45, s = 22;
+function updateCountdown() {
+  s--;
+  if (s < 0) { s = 59; m--; }
+  if (m < 0) { m = 59; h--; }
+  if (h < 0) { h = 23; m = 59; s = 59; }
+  const pad = n => String(n).padStart(2, '0');
+  document.getElementById('cdH').textContent = pad(h);
+  document.getElementById('cdM').textContent = pad(m);
+  document.getElementById('cdS').textContent = pad(s);
+}
+setInterval(updateCountdown, 1000);
+
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 30);
+});
+
+// INIT
+renderFeatured();
+renderProducts();
+renderSale();
+renderCart();
+renderWishlist();
+document.getElementById('cartCount').textContent = cart.length;
+</script>
+</body>
+</html>
